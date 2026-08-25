@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { getDoctor } from '../../../../api/doctor/doctor.api';
-import type { Doctor } from '../../../../types/doctor';
+import { useCallback } from 'react';
+import { getDoctor } from '@/api/doctor/doctor.api';
+import { useAsyncResource } from '@/hooks/useAsyncResource';
+import type { Doctor } from '@/types/doctor';
 
 interface UseDoctorIdResult {
   doctor: Doctor | null;
@@ -11,49 +12,20 @@ interface UseDoctorIdResult {
 export function useDoctorId(
   id: string,
 ): UseDoctorIdResult {
-  const [doctor, setDoctor] =
-    useState<Doctor | null>(null);
+  const loadDoctor = useCallback(
+    () => getDoctor(id),
+    [id],
+  );
 
-  const [loading, setLoading] =
-    useState(true);
-
-  const [error, setError] =
-    useState<string | null>(null);
-
-  useEffect(() => {
-    let active = true;
-
-    setLoading(true);
-    setError(null);
-
-    getDoctor(id)
-      .then((data) => {
-        if (active) {
-          setDoctor(data);
-        }
-      })
-      .catch(() => {
-        if (active) {
-          setDoctor(null);
-          setError(
-            'Unable to load doctor information.',
-          );
-        }
-      })
-      .finally(() => {
-        if (active) {
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [id]);
+  const resource = useAsyncResource<Doctor | null>({
+    initialData: null,
+    load: loadDoctor,
+    errorMessage: 'Unable to load doctor information.',
+  });
 
   return {
-    doctor,
-    loading,
-    error,
+    doctor: resource.data,
+    loading: resource.loading,
+    error: resource.error,
   };
 }

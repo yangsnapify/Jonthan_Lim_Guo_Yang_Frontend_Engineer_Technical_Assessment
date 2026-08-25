@@ -1,4 +1,4 @@
-import type { Doctor } from '../../../../types/doctor';
+import type { Doctor } from '@/types/doctor';
 
 interface DoctorCardProps {
   doctor: Doctor;

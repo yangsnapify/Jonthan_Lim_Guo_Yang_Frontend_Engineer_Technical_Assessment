@@ -1,44 +1,18 @@
-import { useEffect, useState } from 'react';
-import { getBookings } from '../../../../api/booking/api';
-import type { Booking } from '../../../../api/booking/types';
+import { getBookings } from '@/api/booking/api';
+import type { Booking } from '@/api/booking/types';
+import { useAsyncResource } from '@/hooks/useAsyncResource';
 
 export function useBookingList() {
-  const [bookings, setBookings] = useState<Booking[]>(
-    [],
-  );
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(
-    null,
-  );
-
-  useEffect(() => {
-    let active = true;
-
-    getBookings()
-      .then((data) => {
-        if (active) {
-          setBookings(data);
-        }
-      })
-      .catch(() => {
-        if (active) {
-          setError('Unable to load bookings.');
-        }
-      })
-      .finally(() => {
-        if (active) {
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
+  const resource = useAsyncResource<Booking[]>({
+    initialData: [],
+    load: getBookings,
+    errorMessage: 'Unable to load bookings.',
+  });
 
   return {
-    bookings,
-    loading,
-    error,
+    bookings: resource.data,
+    loading: resource.loading,
+    error: resource.error,
+    refresh: resource.refresh,
   };
 }

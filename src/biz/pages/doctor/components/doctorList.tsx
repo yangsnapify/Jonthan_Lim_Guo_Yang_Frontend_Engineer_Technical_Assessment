@@ -1,3 +1,4 @@
+import { PageHeading } from '@/components/pageHeading';
 import { useDoctorList } from '../hooks/useDoctorList';
 import { DoctorCard } from './doctorCard';
 
@@ -32,16 +33,11 @@ export function DoctorList({
 
   return (
     <section>
-      <div className="page-heading">
-        <p className="eyebrow">Find your doctor</p>
-
-        <h1>Choose a doctor</h1>
-
-        <p>
-          Browse our available doctors and find a
-          convenient appointment time.
-        </p>
-      </div>
+      <PageHeading
+        eyebrow="Find your doctor"
+        title="Choose a doctor"
+        description="Browse our available doctors and find a convenient appointment time."
+      />
 
       <div className="doctor-grid">
         {doctors.map((doctor) => (

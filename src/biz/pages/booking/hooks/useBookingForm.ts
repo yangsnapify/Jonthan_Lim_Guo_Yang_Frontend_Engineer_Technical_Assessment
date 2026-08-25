@@ -1,40 +1,104 @@
-import { useState } from 'react';
-import type { CreateBookingRequest } from '../../../../api/booking/types';
+import { useMemo, useState } from 'react';
+import { useDoctorId } from '@/biz/pages/doctor/hooks/useDoctorId';
+import { useBookingList } from '@/biz/pages/booking/hooks/useBookingList';
+import {
+  getAvailableSlots,
+  getSuggestedDates,
+  type AvailableSlot,
+  type AvailableDate,
+} from '@/biz/pages/booking/utils/availability';
+import {
+  validateBookingForm,
+  type BookingFormErrors,
+} from '@/biz/pages/booking/utils/validation';
+import type { CreateBookingRequest } from '@/api/booking/types';
 
-interface BookingFormErrors {
-  name?: string;
-  date?: string;
-  start?: string;
-}
+export type BookingFormPayload = CreateBookingRequest;
 
-export function useBookingForm(doctorId: string) {
+export function useBookingForm(
+  doctorId: string,
+) {
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
-  const [start, setStart] = useState<number | null>(null);
+  const [start, setStart] =
+    useState<number | null>(null);
+
   const [errors, setErrors] =
     useState<BookingFormErrors>({});
 
-  function validate() {
-    const nextErrors: BookingFormErrors = {};
+  const {
+    doctor,
+    loading: doctorLoading,
+    error: doctorError,
+  } = useDoctorId(doctorId);
 
-    if (!name.trim()) {
-      nextErrors.name = 'Please enter your name.';
-    }
+  const {
+    bookings,
+    loading: bookingsLoading,
+    error: bookingsError,
+  } = useBookingList();
 
-    if (!date) {
-      nextErrors.date = 'Please select a date.';
-    }
+  const availableSlots =
+    useMemo<AvailableSlot[]>(() => {
+      if (!doctor || !date) {
+        return [];
+      }
 
-    if (start === null) {
-      nextErrors.start = 'Please select a time.';
-    }
+      return getAvailableSlots(
+        doctor,
+        bookings,
+        date,
+      );
+    }, [doctor, bookings, date]);
+
+  const suggestedDates =
+    useMemo<AvailableDate[]>(() => {
+      if (!doctor) {
+        return [];
+      }
+
+      return getSuggestedDates(doctor, bookings);
+    }, [doctor, bookings]);
+
+  function handleDateChange(
+    value: string,
+  ) {
+    setDate(value);
+    setStart(null);
+
+    setErrors((current) => ({
+      ...current,
+      date: undefined,
+      start: undefined,
+    }));
+  }
+
+  function handleStartChange(
+    value: number,
+  ) {
+    setStart(value);
+
+    setErrors((current) => ({
+      ...current,
+      start: undefined,
+    }));
+  }
+
+  function validate(): boolean {
+    const nextErrors = validateBookingForm({
+      name,
+      date,
+      start,
+    });
 
     setErrors(nextErrors);
 
     return Object.keys(nextErrors).length === 0;
   }
 
-  function getPayload(): CreateBookingRequest | null {
+  function getPayload():
+    | BookingFormPayload
+    | null {
     if (!validate() || start === null) {
       return null;
     }
@@ -51,11 +115,22 @@ export function useBookingForm(doctorId: string) {
     name,
     date,
     start,
+
     errors,
+
+    availableSlots,
+    suggestedDates,
+
+    doctorLoading,
+    bookingsLoading,
+
+    doctorError,
+    bookingsError,
+
     setName,
-    setDate,
-    setStart,
-    validate,
+    setDate: handleDateChange,
+    setStart: handleStartChange,
+
     getPayload,
   };
 }

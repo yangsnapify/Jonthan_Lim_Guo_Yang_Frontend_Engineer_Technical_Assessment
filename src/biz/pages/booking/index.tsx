@@ -1,4 +1,6 @@
-import { BookingForm } from './components/bookingForm';
+import { BackButton } from '@/components/backButton';
+import { PageHeading } from '@/components/pageHeading';
+import { BookingForm } from '@/biz/pages/booking/components/bookingForm';
 
 interface BookingPageProps {
   doctorId: string;
@@ -13,26 +15,13 @@ export default function BookingPage({
 }: BookingPageProps) {
   return (
     <section className="booking-page">
-      <button
-        type="button"
-        className="back-button"
-        onClick={onBack}
-      >
-        ← Back to doctor
-      </button>
+      <BackButton onClick={onBack}>Back to doctor</BackButton>
 
-      <div className="page-heading">
-        <p className="eyebrow">
-          Book an appointment
-        </p>
-
-        <h1>Choose your appointment</h1>
-
-        <p>
-          Select a date and time, then enter your
-          details to confirm your appointment.
-        </p>
-      </div>
+      <PageHeading
+        eyebrow="Book an appointment"
+        title="Choose your appointment"
+        description="Select a date and time, then enter your details to confirm your appointment."
+      />
 
       <BookingForm
         doctorId={doctorId}

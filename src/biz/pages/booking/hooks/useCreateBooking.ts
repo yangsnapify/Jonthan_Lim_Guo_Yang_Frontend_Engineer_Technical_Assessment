@@ -1,48 +1,17 @@
-import { useState } from 'react';
-import { createBooking } from '../../../../api/booking/api';
-import type {
-  Booking,
-  CreateBookingRequest,
-} from '../../../../api/booking/types';
+import { createBooking } from '@/api/booking/api';
+import type { CreateBookingRequest } from '@/api/booking/types';
+import { useAsyncAction } from '@/hooks/useAsyncAction';
 
 export function useCreateBooking() {
-  const [booking, setBooking] =
-    useState<Booking | null>(null);
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const [error, setError] =
-    useState<string | null>(null);
-
-  async function submit(
-    data: CreateBookingRequest,
-  ) {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const result =
-        await createBooking(data);
-
-      setBooking(result);
-
-      return result;
-    } catch {
-      setError(
-        'Unable to create booking.',
-      );
-
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }
+  const action = useAsyncAction(
+    createBooking,
+    'Unable to create booking.',
+  );
 
   return {
-    booking,
-    loading,
-    error,
-    submit,
+    booking: action.data,
+    loading: action.loading,
+    error: action.error,
+    submit: (data: CreateBookingRequest) => action.execute(data),
   };
 }

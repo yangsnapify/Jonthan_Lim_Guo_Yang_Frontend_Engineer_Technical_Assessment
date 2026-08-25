@@ -1,4 +1,4 @@
-import { apiRequest } from '../api';
+import { apiRequest } from '@/api/api';
 import type {
   Booking,
   CreateBookingRequest,
@@ -28,12 +28,19 @@ export function createBooking(
 export function cancelBooking(
   id: string,
 ): Promise<Booking> {
+  return updateBookingStatus(id, 'cancelled');
+}
+
+export function updateBookingStatus(
+  id: string,
+  status: Booking['status'],
+): Promise<Booking> {
   return apiRequest<Booking>(
     `/booking/${id}`,
     {
       method: 'PATCH',
       body: JSON.stringify({
-        status: 'cancel',
+        status,
       }),
     },
   );

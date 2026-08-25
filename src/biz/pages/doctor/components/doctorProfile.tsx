@@ -1,3 +1,4 @@
+import { BackButton } from '@/components/backButton';
 import { useDoctorId } from '../hooks/useDoctorId';
 
 interface DoctorProfileProps {
@@ -28,13 +29,7 @@ export function DoctorProfile({
   if (error) {
     return (
       <section className="doctor-profile">
-        <button
-          type="button"
-          className="back-button"
-          onClick={onBack}
-        >
-          ← Back to doctors
-        </button>
+        <BackButton onClick={onBack}>Back to doctors</BackButton>
 
         <p className="state-message error">
           {error}
@@ -46,13 +41,7 @@ export function DoctorProfile({
   if (!doctor) {
     return (
       <section className="doctor-profile">
-        <button
-          type="button"
-          className="back-button"
-          onClick={onBack}
-        >
-          ← Back to doctors
-        </button>
+        <BackButton onClick={onBack}>Back to doctors</BackButton>
 
         <p className="state-message">
           Doctor not found.
@@ -63,13 +52,7 @@ export function DoctorProfile({
 
   return (
     <section className="doctor-profile">
-      <button
-        type="button"
-        className="back-button"
-        onClick={onBack}
-      >
-        ← Back to doctors
-      </button>
+      <BackButton onClick={onBack}>Back to doctors</BackButton>
 
       <div className="profile-header">
         <div className="doctor-avatar large">

@@ -1,33 +1,15 @@
-import { useState } from 'react';
-import { cancelBooking } from '../../../../api/booking/api';
+import { cancelBooking } from '@/api/booking/api';
+import { useAsyncAction } from '@/hooks/useAsyncAction';
 
 export function useCancelBooking() {
-  const [loading, setLoading] =
-    useState(false);
-
-  const [error, setError] =
-    useState<string | null>(null);
-
-  async function cancel(id: string) {
-    setLoading(true);
-    setError(null);
-
-    try {
-      return await cancelBooking(id);
-    } catch {
-      setError(
-        'Unable to cancel booking.',
-      );
-
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }
+  const action = useAsyncAction(
+    cancelBooking,
+    'Unable to cancel booking.',
+  );
 
   return {
-    cancel,
-    loading,
-    error,
+    cancel: action.execute,
+    loading: action.loading,
+    error: action.error,
   };
 }
