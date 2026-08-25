@@ -1,8 +1,8 @@
-import type { Doctor } from '../types/doctor';
+import type { Doctor } from '../../../../types/doctor';
 
 interface DoctorCardProps {
   doctor: Doctor;
-  onSelect: (doctor: Doctor) => void;
+  onSelect: (id: string) => void;
 }
 
 export function DoctorCard({
@@ -29,10 +29,12 @@ export function DoctorCard({
         </p>
 
         <button
-          className="primary-button"
-          onClick={() => onSelect(doctor)}
+          type="button"
+          className="doctor-profile-button"
+          onClick={() => onSelect(doctor.id)}
         >
-          View profile
+          <span>View profile</span>
+          <span className="doctor-profile-arrow">→</span>
         </button>
       </div>
     </article>

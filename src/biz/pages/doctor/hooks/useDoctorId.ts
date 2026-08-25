@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getDoctor } from '../api/doctor/doctor.api';
-import type { Doctor } from '../types/doctor';
+import { getDoctor } from '../../../../api/doctor/doctor.api';
+import type { Doctor } from '../../../../types/doctor';
 
 interface UseDoctorIdResult {
   doctor: Doctor | null;

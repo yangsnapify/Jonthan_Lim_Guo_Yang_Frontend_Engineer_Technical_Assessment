@@ -3,11 +3,13 @@ import { useDoctorId } from '../hooks/useDoctorId';
 interface DoctorProfileProps {
   doctorId: string;
   onBack: () => void;
+  onBook: () => void;
 }
 
 export function DoctorProfile({
   doctorId,
   onBack,
+  onBook,
 }: DoctorProfileProps) {
   const {
     doctor,
@@ -27,6 +29,7 @@ export function DoctorProfile({
     return (
       <section className="doctor-profile">
         <button
+          type="button"
           className="back-button"
           onClick={onBack}
         >
@@ -41,12 +44,27 @@ export function DoctorProfile({
   }
 
   if (!doctor) {
-    return null;
+    return (
+      <section className="doctor-profile">
+        <button
+          type="button"
+          className="back-button"
+          onClick={onBack}
+        >
+          ← Back to doctors
+        </button>
+
+        <p className="state-message">
+          Doctor not found.
+        </p>
+      </section>
+    );
   }
 
   return (
     <section className="doctor-profile">
       <button
+        type="button"
         className="back-button"
         onClick={onBack}
       >
@@ -103,6 +121,14 @@ export function DoctorProfile({
           </div>
         </div>
       </div>
+
+      <button
+        type="button"
+        className="primary-button"
+        onClick={onBook}
+      >
+        Book appointment
+      </button>
     </section>
   );
 }

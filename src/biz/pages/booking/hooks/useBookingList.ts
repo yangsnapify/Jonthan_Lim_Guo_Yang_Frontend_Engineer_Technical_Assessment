@@ -1,24 +1,28 @@
 import { useEffect, useState } from 'react';
-import type { Doctor } from '../types/doctor';
-import { getDoctors } from '../api/doctor/doctor.api';
+import { getBookings } from '../../../../api/booking/api';
+import type { Booking } from '../../../../api/booking/types';
 
-export function useDoctorList() {
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
+export function useBookingList() {
+  const [bookings, setBookings] = useState<Booking[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     let active = true;
 
-    getDoctors()
+    getBookings()
       .then((data) => {
         if (active) {
-          setDoctors(data);
+          setBookings(data);
         }
       })
       .catch(() => {
         if (active) {
-          setError('Unable to load doctors.');
+          setError('Unable to load bookings.');
         }
       })
       .finally(() => {
@@ -33,7 +37,7 @@ export function useDoctorList() {
   }, []);
 
   return {
-    doctors,
+    bookings,
     loading,
     error,
   };

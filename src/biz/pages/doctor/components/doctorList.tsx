@@ -1,9 +1,8 @@
-import type { Doctor } from '../types/doctor';
 import { useDoctorList } from '../hooks/useDoctorList';
 import { DoctorCard } from './doctorCard';
 
 interface DoctorListProps {
-  onSelect: (doctor: Doctor) => void;
+  onSelect: (id: string) => void;
 }
 
 export function DoctorList({

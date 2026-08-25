@@ -1,12 +1,8 @@
 import { apiRequest } from '../api';
-import type { Booking } from './types';
-
-export interface CreateBookingRequest {
-  name: string;
-  doctorId: string;
-  start: number;
-  date: string;
-}
+import type {
+  Booking,
+  CreateBookingRequest,
+} from './types';
 
 export function getBookings(): Promise<Booking[]> {
   return apiRequest<Booking[]>('/booking');
@@ -15,7 +11,9 @@ export function getBookings(): Promise<Booking[]> {
 export function getBooking(
   id: string,
 ): Promise<Booking> {
-  return apiRequest<Booking>(`/booking/${id}`);
+  return apiRequest<Booking>(
+    `/booking/${id}`,
+  );
 }
 
 export function createBooking(
@@ -30,10 +28,13 @@ export function createBooking(
 export function cancelBooking(
   id: string,
 ): Promise<Booking> {
-  return apiRequest<Booking>(`/booking/${id}`, {
-    method: 'PATCH',
-    body: JSON.stringify({
-      status: 'cancel',
-    }),
-  });
+  return apiRequest<Booking>(
+    `/booking/${id}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({
+        status: 'cancel',
+      }),
+    },
+  );
 }

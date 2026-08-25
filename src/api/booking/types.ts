@@ -10,3 +10,10 @@ export interface Booking {
   date: string;
   status: BookingStatus;
 }
+
+export interface CreateBookingRequest {
+  name: string;
+  doctorId: string;
+  start: number;
+  date: string;
+}
