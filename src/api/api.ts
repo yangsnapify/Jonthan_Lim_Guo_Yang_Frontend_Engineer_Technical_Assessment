@@ -1,8 +1,7 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
   ?? 'https://bowtie-fe-assignment-api.onrender.com';
 
-const API_KEY = import.meta.env.VITE_API_KEY
-  ?? '769e4a7f-0cbc-46a2-b729-4afb20f55c98';
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 interface ApiOptions extends RequestInit {
   params?: Record<string, string>;
